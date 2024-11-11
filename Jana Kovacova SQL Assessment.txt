@@ -1,0 +1,85 @@
+1.Select top 10 records from Employee table where Emp_Sal > 10000
+
+Answer:
+SELECT TOP 10 *
+FROM Employee
+WHERE Emp_Sal > 10000
+ORDER BY Emp_Sal DESC;
+
+
+2.Retrieve Emp_Id, Emp_FName, Emp_Addr1, Emp_City, Emp_Zip, Dept_Name, Dept_City 
+From Employee whose Department City is Brentwood. Use Table Alias
+
+Answer:
+SELECT e.Emp_Id, e.Emp_FName, e.Emp_Addr1, e.Emp_City, e.Emp_Zip, 
+       d.Dept_Name, d.Dept_City
+FROM Employee e
+JOIN Emp_Department d ON e.Dept_Id = d.Dept_Id
+WHERE d.Dept_City = 'Brentwood';
+
+3.Retrieve Emp_ID, Emp_Fname, Emp_Zip from Employee who are all working in department HR&Training and Compliance. Use embedded SQL statments
+
+Answer:
+SELECT Emp_ID, Emp_Fname, Emp_Zip
+FROM Employee
+WHERE Dept_Id IN (
+    SELECT Dept_Id
+    FROM Emp_Department
+    WHERE Dept_Name IN ('HR&Training', 'Compliance')
+);
+
+4.Retrieve Sum(Emp_Sal) and Dept_Name From Employee and Emp_Department by Dept_Name (Group By)
+
+Answer:
+SELECT d.Dept_Name, SUM(e.Emp_Sal) AS Total_Salary
+FROM Employee e
+JOIN Emp_Department d ON e.Dept_Id = d.Dept_Id
+GROUP BY d.Dept_Name;
+
+5.Select 2nd highest sal from Employee table
+
+Answer:
+SELECT MAX(Emp_Sal) AS Second_Highest_Salary
+FROM Employee
+WHERE Emp_Sal < (SELECT MAX(Emp_Sal) FROM Employee);
+
+6. Rename a column Person_Name to P_Name in the table Person
+
+Answer:
+EXEC sp_rename 'NYTaxi.dbo.Person.Person_Name', P_Name', 'COLUMN';
+
+7.List down all the SQL constraints
+
+Answer:
+select *
+from information_schema.referential_constraints
+
+
+8. Retrieve Emp_Id, Emp_FName, Emp_LName for location Zip_Code 88160 (use all three Employee tables) Use Embedded sql statements
+
+Answer:
+SELECT e.Emp_Id, e.Emp_FName, e.Emp_LName
+FROM Employee e
+WHERE e.Emp_Id IN (
+    SELECT el.Emp_Id
+    FROM Employee_Location el
+    WHERE el.Zip_Code = '88160'
+)
+AND e.Emp_Id IN (
+    SELECT ed.Emp_Id
+    FROM Employee_Department ed
+);
+
+9. Write a query using Right Outer join to retrieve the data from Employee and Emp_Department table
+
+Answer: 
+SELECT e.Emp_Id, e.Emp_FName, e.Emp_LName, d.Dept_Name
+FROM Employee e
+RIGHT OUTER JOIN Emp_Department d ON e.Dept_Id = d.Dept_Id;
+
+10. Write a query using Full Outer join to retrieve the data from Employee and Emp_Department tables
+
+Answer: 
+SELECT e.Emp_Id, e.Emp_FName, e.Emp_LName, d.Dept_Name
+FROM Employee e
+FULL OUTER JOIN Emp_Department d ON e.Dept_Id = d.Dept_Id;
